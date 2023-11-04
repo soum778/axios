@@ -1,0 +1,502 @@
+
+Given an integer array nums of length n and an integer target, find three integers in nums such that the sum is closest to target.
+
+Return the sum of the three integers.
+
+You may assume that each input would have exactly one solution.
+
+
+soln--
+ Arrays.sort(nums);
+
+        // Initializing closestsum variable to a large integer
+        int closestsum = Integer.MAX_VALUE;
+
+        // Traversing through the whole list
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Defining Pointers left and right to get closestsum
+            int left = i + 1, right = nums.length - 1;
+
+            // Traversing through remaining elements of list for each i value
+            while (left < right) {
+                // Defining currentsum which will be used to compare with closestsum
+                int currentsum = nums[i] + nums[left] + nums[right];
+
+                if (Math.abs(currentsum - target) < Math.abs(closestsum - target)) {
+                    closestsum = currentsum; // Assigning closest value to closestsum each time
+                }
+
+                if (currentsum < target) {
+                    left++; // If closest sum is less than we need to add a higher element so move left pointer
+                } else {
+                    right--; // If closest sum is higher than we need to remove a higher element so move right pointer
+                }
+            }
+        }
+        return closestsum;
+    }
+
+
+2)  Reverse a Linked List in groups of given size
+
+
+
+ Node reverse(Node head, int k)
+    {
+        if(head == null)
+          return null;
+        Node current = head;
+        Node next = null;
+        Node prev = null;
+  
+        int count = 0;
+  
+        /* Reverse first k nodes of linked list */
+        while (count < k && current != null) {
+            next = current.next;
+            current.next = prev;
+            prev = current;
+            current = next;
+            count++;
+        }
+  
+        /* next is now a pointer to (k+1)th node
+           Recursively call for the list starting from
+           current. And make rest of the list as next of
+           first node */
+        if (next != null)
+            head.next = reverse(next, k);
+  
+        // prev is now head of input list
+        return prev;
+    }
+
+
+4)  Remove k digits
+
+
+ int n=num.size();
+        stack<char> st;
+        for(int i=0;i<n;i++){
+            while(!st.empty() && k>0 && st.top()>num[i]){
+                st.pop();
+                k--;
+            }
+            if(!st.empty() || num[i]!='0'){
+                st.push(num[i]);
+            }
+        }
+        while(!st.empty() && k>0){
+                st.pop();
+                k--;
+            }
+             if(st.empty()){
+                return "0";
+            }
+            while(!st.empty() ){
+                num[n-1]=st.top();
+                st.pop();
+                n--;
+            }
+            cout<<n;
+            return num.substr(n);
+    }
+
+
+5)remove zero consecutive nodes sum
+  public ListNode removeZeroSumSublists(ListNode head) {
+        int sum = 0;
+    ListNode dm = new ListNode(0);
+    dm.next = head;
+
+    Map<Integer, ListNode> mp = new HashMap<>();
+    mp.put(0, dm);
+
+
+    for (ListNode i = dm; i != null; i = i.next) {
+        sum += i.val;
+        mp.put(sum, i);
+    }
+
+
+    sum = 0;
+    for (ListNode i = dm; i != null; i = i.next) {
+        sum += i.val;
+        i.next = mp.get( sum ).next;
+    }
+    
+    return dm.next;
+    }
+6) length of the longest alphabetical continous substring
+
+class Solution {
+    public int longestContinuousSubstring(String s) {
+         // initialize variables
+        char lastChar = s.charAt(0);
+        int start = 0;
+        int res = 0;
+        char [] chars = s.toCharArray();
+        
+        // loop through each character of the string
+        for(int i = 1; i < chars.length; i++){
+            // if current character is one more than the previous character in ASCII order
+            if(chars[i] == lastChar + 1){
+                lastChar = chars[i];
+            }
+            // otherwise, reset the start index and update the longest length seen so far
+            else{
+                res = Math.max(res, i - start);
+                lastChar = chars[i];
+                start = i;
+            }
+        }
+        // handle the case where the longest substring is at the end of the string
+        res = Math.max(res, chars.length - start);
+        // return the longest length seen
+        return res;
+}
+
+7)  3 Sum
+
+
+
+        List<List<Integer>> ans = new ArrayList<>();
+
+        // Sort the array
+        Arrays.sort(nums);
+
+        for (int i = 0; i < nums.length - 2; i++) {
+            // Skip duplicate elements for i
+            if (i > 0 && nums[i] == nums[i - 1]) {
+                continue;
+            }
+
+            int j = i + 1;
+            int k = nums.length - 1;
+
+            while (j < k) {
+                int sum = nums[i] + nums[j] + nums[k];
+
+                if (sum == 0) {
+                    // Found a triplet with zero sum
+                    ans.add(Arrays.asList(nums[i], nums[j], nums[k]));
+
+                    // Skip duplicate elements for j
+                    while (j < k && nums[j] == nums[j + 1]) {
+                        j++;
+                    }
+
+                    // Skip duplicate elements for k
+                    while (j < k && nums[k] == nums[k - 1]) {
+                        k--;
+                    }
+
+                    // Move the pointers
+                    j++;
+                    k--;
+                } else if (sum < 0) {
+                    // Sum is less than zero, increment j to increase the sum
+                    j++;
+                } else {
+                    // Sum is greater than zero, decrement k to decrease the sum
+                    k--;
+                }
+            }
+        }
+        return ans;
+    }
+
+
+8) 4 Sum
+
+
+
+ List<List<Integer>> ans=new ArrayList<>();
+        Arrays.sort(nums);
+        for(int i=0;i<nums.length-3;i++)
+        {
+            for(int j=i+1;j<nums.length-2;j++)
+            {
+                long res = (nums[i] + nums[j]);
+                long remaining = target - res;
+            
+                int left=j+1;
+                int right=nums.length-1;
+                while(left<right)
+                {
+                    long sum=nums[left]+nums[right];
+                    if( sum == remaining)
+                    {
+                        ArrayList<Integer> temp=new ArrayList<>();
+                        temp.add(nums[i]);
+                        temp.add(nums[j]);
+                        temp.add(nums[left]);
+                        temp.add(nums[right]);
+                        if(!ans.contains(temp))ans.add(temp);
+                        left++;
+                        right--;
+                    }
+                    else if(sum<remaining)
+                    {
+                        left++;
+                        
+                    }
+                    else if(sum>remaining){
+                       right--;
+                    }
+                    
+                }
+            }
+
+        }
+        return ans;
+        }
+
+
+9)  Container with most water
+
+class Area{
+ 
+    public static int maxArea(int A[], int len)
+    {
+        int l = 0;
+        int r = len -1;
+        int area = 0;
+     
+        while (l < r)
+        {
+            // Calculating the max area
+            area = Math.max(area,
+                        Math.min(A[l], A[r]) * (r - l));
+                         
+            if (A[l] < A[r])
+                l += 1;
+                 
+            else
+                r -= 1;
+        }
+        return area;
+    }
+
+
+
+2nd solution
+public static int maxArea(int[] a)
+{
+ 
+    int Area = 0;
+     
+    for(int i = 0; i < a.length; i++)
+    {
+        for(int j = i + 1; j < a.length; j++)
+        {
+            Area = Math.max(
+                Area, Math.min(a[i], a[j]) *
+                              (j - i));
+        }
+    }
+    return Area;
+}
+ 
+10) optimal soloution of a substring
+ public int partitionString(String s) {
+        char[] arr = s.toCharArray();
+        int i = 0;
+        int count = 0;
+        
+        while (i < arr.length) {
+            int j = i + 1;
+            boolean[] seen = new boolean[26]; // To track characters seen in the current substring
+            
+            seen[arr[i] - 'a'] = true; // Mark the first character as seen
+            
+            while (j < arr.length && !seen[arr[j] - 'a']) {
+                seen[arr[j] - 'a'] = true; // Mark new characters as seen
+                j++;
+            }
+            
+            count++; // Increment the count for each substring
+            i = j; // Move i to the next substring
+        }
+        
+        return count;
+    }
+
+11) missing positive number
+
+ public int firstMissingPositive(int[] nums) {
+        int i =0;
+        while(i<nums.length){
+            if(nums[i]<=nums.length && nums[i]>0 && i != nums[i]-1){
+                if(nums[i] == nums[nums[i]-1]){
+                    i++; //duplicate nums
+                }else{
+                int temp = nums[i];
+                nums[i] = nums[temp-1];
+                nums[temp-1] = temp;
+                }
+
+            }else{ // ignore negative nums and nums at proper indices
+                i++;
+            }
+        }
+        for(int j=0;j<nums.length ; j++){
+            if(j != nums[j]-1){
+                return j+1;
+            }
+        }
+        return nums.length+1;
+    }
+12) Grumpy store
+
+class Solution {
+    public static int maxWhenGrumpy(int[] cust, int[] g, int k) {
+        int maxi = 0, i = 0, sum = 0, j = 0, n = cust.length;
+        while (i < k) {
+            if (g[i] == 1)
+                sum += cust[i];
+            i++;
+        }
+        maxi = Math.max(maxi, sum);
+
+        while (i < n) {
+            if (g[j] == 1)
+                sum -= cust[j];
+            if (g[i] == 1)
+                sum += cust[i];
+            maxi = Math.max(maxi, sum);
+            i++;
+            j++;
+        }
+        return maxi;
+
+    }
+    public int maxSatisfied(int[] customers, int[] grumpy, int minutes) {
+        int max = 0, n = customers.length;
+        max = maxWhenGrumpy(customers, grumpy, minutes);
+        int sum = 0;
+        for (int i = 0; i < n; i++) {
+            if (grumpy[i] == 0)
+                sum += customers[i];
+        }
+        return max + sum;
+    }
+}
+
+12) maximum points on a line
+
+ public int maxPoints(int[][] points) {
+
+        int res=2;
+        int n=points.length;
+        if(n==1)return 1;
+        // x1(y2 – y3) + x2(y3 – y1) + x3(y1 – y2) = 0
+        for(int i=0;i<n;i++)
+        {
+            for(int j=i+1;j<n;j++)
+            {
+                int extra=2;
+                for(int k=0;k<n;k++)
+                {
+                    if(k==i||k==j)continue;
+                    int p1=points[i][0]*(points[j][1]-points[k][1]);//x1(y2 – y3)
+                    int p2=points[j][0]*(points[k][1]-points[i][1]);//x2(y3 – y1)
+                    int p3=points[k][0]*(points[i][1]-points[j][1]);//x3(y1 – y2)
+                    if(p1+p2+p3==0)extra++;
+                }
+
+                res=Math.max(res,extra);
+            }
+        }
+        return res;
+
+13) minimum no of taps to open
+
+class Solution {
+    public int minTaps(int n, int[] ranges) {
+        int max=0;
+        int open=0;
+        int min=0;
+        while(max<n)
+        {
+            for(int i=0;i<ranges.length;i++)
+            {
+                if(i-ranges[i]<=min && i+ranges[i]>max)
+                {
+                    max=i+ranges[i];
+                }
+
+            }
+            if(min==max) return -1;
+            open++;
+            min=max;
+        }
+        return open;
+        
+    }
+}
+14) find all groups of farmland
+
+
+
+class Solution {
+    int endRow = 0, endCol = 0;         //to store the end of present farm, 
+                                        // initially assumed that there are no farms hence ends at 0, 0
+    int row, col;
+    public int[][] findFarmland(int[][] land) {
+        row = land.length;
+        col = land[0].length;
+        ArrayList<int[]> list = new ArrayList<>();
+        
+        for(int i = 0; i<row; i++){
+            for(int j = 0; j<col; j++){
+                if(land[i][j] == 1){
+                    // we have found the start of a farm land
+                    // r1 = i, c1 = j
+                    //we now need to find the ends, i.e, endRow and endCol for the farm
+                    //for this we can excecute a dfs to adjust out endRow and endCol 
+                    
+                    dfs(land, i, j);            //this should populate our endRow and endCol
+                    //after excecuting the dfs we must have r1 = i, c1 = j, r2 = endRow and c2 = endCol
+                    list.add(new int[]{i, j, endRow, endCol});
+                    
+                    //we need to reinitialize endRow and endCol for any nextPossible entry
+                    endRow = 0;
+                    endCol = 0;
+                }
+            }
+        }
+        
+        // we have a list of entries, we just need to add into an array and return
+        // Integer[][] arr = new Integer[list.size()];       // we use Integer as toArray func returns an Object which needs to be type casted
+        // arr = list.toArray();
+        // return arr;
+        // 
+        int arr[][] = new int[list.size()][4];
+        for(int i = 0; i<arr.length; i++)arr[i] = list.get(i);
+        return arr;
+        
+        //we can also use int[] arr = list.stream().mapToInt(i -> i).toArray(); to convert 
+    }
+    
+    public void dfs(int[][] land, int i, int j){
+        //base case - when we go beyong the boundaries OR if we reach a forest area
+        if(i<0 || j<0 || i>=row || j>=col || land[i][j] == 0)return; 
+        
+        land[i][j] = 0;
+        //marking the land as visited to avoid stackoverflow
+        dfs(land, i+1, j);      
+        //dfs(land, i-1, j);   --- I realised that if we only move right and bottom the runtime increases significantly, although I didnt understand why. Pls let me know if you understand
+        dfs(land, i, j+1);
+        //dfs(land, i, j-1);
+        
+        endRow = Math.max(endRow, i);
+        endCol = Math.max(endCol, j);
+    }
+}
+
+
+15)
+
+
+
